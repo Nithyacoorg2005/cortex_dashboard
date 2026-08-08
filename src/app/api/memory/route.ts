@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { query } from "@/lib/db";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
+
 // Initialize AWS S3 Client
 const s3 = new S3Client({
   region: process.env.AWS_REGION as string,
@@ -17,6 +18,7 @@ function generateMock768Embedding() {
   const magnitude = Math.sqrt(vector.reduce((acc, val) => acc + val * val, 0));
   return vector.map((val) => (val / magnitude).toFixed(6));
 }
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   try {

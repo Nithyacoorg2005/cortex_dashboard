@@ -1,31 +1,24 @@
-import { Pool } from "pg";
+import { Pool } from 'pg';
 
-declare global {
-  var _dbPool: Pool | undefined;
-}
+let pool: Pool | null = null;
 
-if (!process.env.DATABASE_URL) {
-  throw new Error("Missing Database URL");
-}
-
-export const pool =
-  global._dbPool ||
-  new Pool({
-    connectionString: process.env.DATABASE_URL,
-    max: 20,
-    idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 5000,
-  });
-
-if (process.env.NODE_ENV !== "production") {
-  global._dbPool = pool;
+export function getPool(): Pool {
+  if (!pool) {
+    const connectionString = process.env.DATABASE_URL;
+    if (!connectionString) {
+      throw new Error("DATABASE_URL environment variable is missing.");
+    }
+    pool = new Pool({
+      connectionString,
+      ssl: {
+        rejectUnauthorized: false,
+      },
+    });
+  }
+  return pool;
 }
 
 export async function query(text: string, params?: any[]) {
-  const client = await pool.connect();
-  try {
-    return await client.query(text, params);
-  } finally {
-    client.release();
-  }
+  const p = getPool();
+  return p.query(text, params);
 }
