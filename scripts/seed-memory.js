@@ -3,9 +3,8 @@ const { Client } = require('pg');
 
 const client = new Client({ connectionString: process.env.DATABASE_URL });
 
-// Locally generates a normalized 768-dimensional vector
 function generateMock768Embedding() {
-  const vector = new Array(768).fill(0).map(() => Math.random() - 0.5);
+  const vector = new Array(768).fill(0.5);
   const magnitude = Math.sqrt(vector.reduce((acc, val) => acc + val * val, 0));
   return vector.map(val => (val / magnitude).toFixed(6));
 }
