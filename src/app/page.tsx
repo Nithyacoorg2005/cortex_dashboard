@@ -12,17 +12,17 @@ type Incident = {
 };
 
 export default async function DashboardHome() {
-  const result = await query<Incident>(`
-    SELECT
-      id,
-      title,
-      status,
-      severity,
-      created_at
-    FROM incidents
-    ORDER BY created_at DESC
-    LIMIT 8;
-  `);
+  const result = await query(`
+  SELECT
+    id,
+    title,
+    status,
+    severity,
+    created_at
+  FROM incidents
+  ORDER BY created_at DESC
+  LIMIT 8;
+`);
 
   const incidents = result.rows;
 
